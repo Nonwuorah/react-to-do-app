@@ -9,11 +9,26 @@ export default class App extends Component {
   //In your declared state, you declare an empty array called items, an id, an item, and editItem. The id is used to identify each item in the list.
   //The item is the actual text of the item. The editItem is used to determine if the item is being edited or not. The editItem is set to false by default.
   state = {
-    items: [],
+    items: JSON.parse(localStorage.getItem("items")) || [],
     id: 0,
     item: "",
     editItem: false,
   };
+
+  componentDidMount() {
+    const storedItems = localStorage.getItem("items");
+    if (storedItems) {
+      this.setState({
+        items: JSON.parse(storedItems),
+      });
+    }
+  }
+
+  componentDidUpdate(prevProps, prevState) {
+    if (prevState.items !== this.state.items) {
+      localStorage.setItem("items", JSON.stringify(this.state.items));
+    }
+  }
 
   //The handleChange method is used to set the state of the item. The handleChange method is called in the TodoInput component.
   handleChange = (e) => {
@@ -81,20 +96,25 @@ export default class App extends Component {
     });
   };
 
-  
   render() {
     return (
       //The TodoInput component is imported into the App component. The TodoList component is imported into the App component.
       <div className="container">
         <div className="row">
-          <div className="col-10 mx-auto col-md-8 mt-4">
+          <div className="col-12 col-md-8 mx-auto mt-4">
             <h3 className="text-capitalize text-center">todo input</h3>
             <TodoInput
               item={this.state.item}
               handleChange={this.handleChange}
-              handleSubmit={this.handleSubmit} editItem={this.state.editItem}
+              handleSubmit={this.handleSubmit}
+              editItem={this.state.editItem}
             />
-            <TodoList items={this.state.items} handleDelete={this.handleDelete} clearList={this.clearList} handleEdit={this.handleEdit}/>
+            <TodoList
+              items={this.state.items}
+              handleDelete={this.handleDelete}
+              clearList={this.clearList}
+              handleEdit={this.handleEdit}
+            />
           </div>
         </div>
       </div>

@@ -23,4 +23,8 @@ body{
     border-radius: 15px;
 }
 
-    
+@media screen and (max-width: 768px) {
+  .todo-con {
+    width: 95%;
+  }
+}
